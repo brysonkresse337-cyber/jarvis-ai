@@ -1,0 +1,11 @@
+const messages=document.getElementById("messages"),form=document.getElementById("chat-form"),input=document.getElementById("message-input"),mic=document.getElementById("mic-button"),permissionCount=document.getElementById("permission-count"),voiceStatus=document.getElementById("voice-status");
+
+function addMessage(who,text,kind="jarvis"){const el=document.createElement("div");el.className=`message ${kind}`;el.innerHTML=`<div class="message-label">${who}</div><div class="message-text"></div>`;el.querySelector(".message-text").textContent=text;messages.appendChild(el);messages.scrollTop=messages.scrollHeight}
+function speak(text){if(!("speechSynthesis"in window))return;window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.rate=.94;u.pitch=.85;const voices=speechSynthesis.getVoices();u.voice=voices.find(v=>/Daniel|Google UK English Male|Microsoft George|Alex/i.test(v.name))||voices.find(v=>/en-GB|en-US/i.test(v.lang))||null;speechSynthesis.speak(u)}
+async function send(message){if(!message.trim())return;addMessage("YOU",message,"user");input.value="";try{const r=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message})});const d=await r.json();addMessage("JARVIS",d.reply||"I encountered an error.");speak(d.reply||"I encountered an error.");}catch(e){addMessage("JARVIS","I am unable to reach my core server, Sir.");}}
+form.addEventListener("submit",e=>{e.preventDefault();send(input.value)});
+document.querySelectorAll("[data-command]").forEach(b=>b.addEventListener("click",()=>send(b.dataset.command)));
+(async()=>{try{const r=await fetch("/api/permissions");const p=await r.json();permissionCount.textContent=Object.values(p).flat().length+" GATED";}catch{} })();
+
+const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition;
+if(SpeechRecognition){const rec=new SpeechRecognition();rec.lang="en-US";rec.interimResults=false;mic.addEventListener("click",()=>{voiceStatus.textContent="LISTENING";rec.start()});rec.onresult=e=>{input.value=e.results[0][0].transcript;voiceStatus.textContent="READY";send(input.value)};rec.onerror=()=>voiceStatus.textContent="READY";rec.onend=()=>voiceStatus.textContent="READY";}else{mic.disabled=true;voiceStatus.textContent="UNAVAILABLE";}
