@@ -5,7 +5,7 @@ function speak(text){
   const speakNow=()=>{
     window.speechSynthesis.cancel();
     const u=new SpeechSynthesisUtterance(text);
-    u.rate=1.0;
+    u.rate=1.25;
     u.pitch=1.35;
     u.volume=1;
     const voices=window.speechSynthesis.getVoices();
