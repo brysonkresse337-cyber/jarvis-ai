@@ -146,7 +146,30 @@ function localResponse(message){
   const command=classifyCommand(message), text=message.toLowerCase().trim();
   if(command.permission==="locked"){logAction(command.action,"blocked",message);return {reply:"I cannot execute that operation without the required security authorization, Sir.",permissionRequired:true,permissionLevel:"locked",action:command.action}}
   if(command.permission==="approval"){logAction(command.action,"approval_required",message);return {reply:"That action requires your approval, Sir. I have not executed it.",permissionRequired:true,permissionLevel:"approval",action:command.action}}
-  if(text.includes("who am i")||text.includes("what is my name"))return {reply:"You are Bryson Kresse, Sir.",permissionRequired:false};
+  if(text.includes("who am i")||text.includes("what is my name"))return {reply:"You are Bryson Kresse, Sir. Your surname is pronounced Kre-ss-ee.",permissionRequired:false};
+  if(/^(what do i do|what do you do i do|what is my job|what do i do for work|what do i do for a living)\\??$/.test(text)){
+    const b=profile.business||{}, a=profile.athletics||{};
+    return {reply:`You have two major lanes, Sir. First, you're a track-and-field athlete, with high jump as your primary event; you're currently at ${a.currentHighJump||"6'0\""} and squat ${a.currentSquat||"315 lb"}. Second, you run ${(b.brands||["BK Media"])[0]} and are building it into a professional sports-media company. You do sports photography, videography, media production and event coverage, with experience covering NBA G League, college football, high school football and track. You're also building JARVIS as your personal AI system.`,permissionRequired:false};
+  }
+  if(/^(what are my businesses|what businesses do i have|what companies do i have|tell me about my business|what is my business|what do i do in business)\\??$/.test(text)){
+    const b=profile.business||{};
+    return {reply:`Your main business is ${(b.brands||["BK Media"])[0]}, with the related names ${(b.brands||[]).slice(1).join(", ")}. Your focus is professional sports photography, videography, media production, event coverage and sports content. Your goal is to turn BK Media into a legitimate professional sports-media company.`,permissionRequired:false};
+  }
+  if(/^(what sport do i play|what sports do i do|what are my sports|what is my main sport)\\??$/.test(text)){
+    const a=profile.athletics||{};
+    return {reply:`You compete in track and field, Sir. High jump is your primary event, and you also do the 100m, long jump and discus. Your current high jump is ${a.currentHighJump||"6'0\""} and your current squat is ${a.currentSquat||"315 lb"}.`,permissionRequired:false};
+  }
+  if(/^(what am i working on|what projects am i working on|what am i building|what projects do i have)\\??$/.test(text)){
+    return {reply:"You're working on several major projects, Sir: building BK Media into a professional sports-media company, developing your athletics and recruiting profile, building this JARVIS personal AI system, creating professional websites and digital products, and turning your existing media skills into income.",permissionRequired:false};
+  }
+  if(/^(what are my goals|what are my main goals|what are my priorities|what am i trying to accomplish)\\??$/.test(text)){
+    const a=profile.athletics||{};
+    return {reply:`Your biggest goals are to become a stronger and recruitable college athlete, improve your high jump, speed and explosiveness, grow BK Media into a real professional company, shoot larger events, build JARVIS into a serious personal AI assistant, and turn your skills into businesses and income. In short: athletics, media, technology and entrepreneurship.`,permissionRequired:false};
+  }
+  if(/^(tell me about my photography|what do i do in photography|what kind of photography do i do|what is my photography like)\\??$/.test(text)){
+    const b=profile.business||{}, cwork=profile.creativeWork||{};
+    return {reply:`Your photography is primarily sports-focused, Sir. You have over ${b.experience||"1.5 years"} of experience and work in sports photography, visual storytelling, cinematic sports imagery, NFL-style color grading, high-jump photography, Rembrandt-style sports portraits and event coverage. Your selling points are strong photos and fast response time.`,permissionRequired:false};
+  }
   if(text.includes("what do you know about me")||text.includes("tell me everything about me")){
     const p=profile.identity||{},a=profile.athletics||{},b=profile.business||{},j=profile.jarvisProject||{};
     return {reply:`You are ${p.fullName||"Bryson Kresse"}, age ${p.age||15}, Sir. You are a track-and-field athlete whose primary event is high jump, currently at ${a.currentHighJump||"6'0\""}. Your current squat is ${a.currentSquat||"315 lb"}. You run ${(b.brands||["BK Media"])[0]} and are building a professional sports-media business. You are also building this JARVIS system. I have your complete local profile loaded, plus persistent conversation memory.`,permissionRequired:false};
