@@ -170,6 +170,29 @@ function localResponse(message){
     const b=profile.business||{}, cwork=profile.creativeWork||{};
     return {reply:`Your photography is primarily sports-focused, Sir. You have over ${b.experience||"1.5 years"} of experience and work in sports photography, visual storytelling, cinematic sports imagery, NFL-style color grading, high-jump photography, Rembrandt-style sports portraits and event coverage. Your selling points are strong photos and fast response time.`,permissionRequired:false};
   }
+  if(/^(what do i do|what is my job|what do i do for work|what do i do for a living)\\??$/.test(text)){
+    const b=profile.business||{},a=profile.athletics||{};
+    return {reply:`You have two major lanes, Sir. You're a track-and-field athlete with high jump as your primary event; you're currently at ${a.currentHighJump||"6'0\""} and squat ${a.currentSquat||"315 lb"}. You also run ${(b.brands||["BK Media"])[0]}, a sports-media business focused on photography, videography, media production and event coverage. You've covered NBA G League, college football, high school football and track. You're also building JARVIS as your personal AI system.`,permissionRequired:false};
+  }
+  if(text.includes("what are my businesses")||text.includes("what business do i run")||text.includes("what companies do i have")){
+    const b=profile.business||{};
+    return {reply:`Your main business is ${(b.brands||["BK Media"])[0]}. Related names include ${(b.brands||[]).slice(1).join(", ")}. You focus on sports photography, videography, media production, event coverage and sports content.`,permissionRequired:false};
+  }
+  if(text.includes("what sport do i play")||text.includes("what sports do i do")||text.includes("what is my main sport")){
+    const a=profile.athletics||{};
+    return {reply:`You compete in track and field, Sir. High jump is your primary event, and you also do the 100m, long jump and discus. Your current high jump is ${a.currentHighJump||"6'0\""} and your current squat is ${a.currentSquat||"315 lb"}.`,permissionRequired:false};
+  }
+  if(text.includes("what am i working on")||text.includes("what am i building")||text.includes("what projects am i working on")){
+    return {reply:"You're working on building BK Media into a professional sports-media company, developing your track-and-field/recruiting career, building this JARVIS personal AI system, creating professional websites and digital products, and turning your media skills into income.",permissionRequired:false};
+  }
+  if(text.includes("what are my goals")||text.includes("what are my priorities")||text.includes("what am i trying to accomplish")){
+    return {reply:"Your biggest priorities are athletics, BK Media, technology and entrepreneurship. You want to improve as a high jumper, become more recruitable, grow BK Media into a real professional company, shoot larger events, and build JARVIS into a serious personal AI assistant.",permissionRequired:false};
+  }
+  if(text.includes("tell me about my photography")||text.includes("what kind of photography do i do")||text.includes("what do i do in photography")){
+    const b=profile.business||{};
+    return {reply:`Your photography is primarily sports-focused, Sir. You have ${b.experience||"over 1.5 years"} of experience covering sports and specialize in sports photography, visual storytelling, cinematic imagery, sports portraits and event coverage. Your main selling points are great photos and fast response time.`,permissionRequired:false};
+  }
+
   if(text.includes("what do you know about me")||text.includes("tell me everything about me")){
     const p=profile.identity||{},a=profile.athletics||{},b=profile.business||{},j=profile.jarvisProject||{};
     return {reply:`You are ${p.fullName||"Bryson Kresse"}, age ${p.age||15}, Sir. You are a track-and-field athlete whose primary event is high jump, currently at ${a.currentHighJump||"6'0\""}. Your current squat is ${a.currentSquat||"315 lb"}. You run ${(b.brands||["BK Media"])[0]} and are building a professional sports-media business. You are also building this JARVIS system. I have your complete local profile loaded, plus persistent conversation memory.`,permissionRequired:false};
