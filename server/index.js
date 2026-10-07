@@ -128,7 +128,48 @@ app.post("/api/memory", (req, res) => {
   res.json({ success: true, memory });
 });
 
-app.post("/api/chat", async (req, res) => {
+function tokenize(text){return String(text).toLowerCase().replace(/[^a-z0-9' ]/g," ").split(/\\s+/).filter(Boolean)}
+function rememberConversation(role,text){memory.conversation.push({role,text:String(text),createdAt:new Date().toISOString()});memory.conversation=memory.conversation.slice(-100);saveJson(MEMORY_FILE,memory)}
+function smartProfileAnswer(message){
+  const hits=profileSearch(message);
+  if(!hits.length)return null;
+  const grouped=new Map();
+  for(const h of hits){const root=h.path.split(".")[0];if(!grouped.has(root))grouped.set(root,[]);if(grouped.get(root).length<4)grouped.get(root).push(h)}
+  return [...grouped.entries()].slice(0,5).map(([k,items])=>items.map(x=>`${k}: ${x.value}`).join("\\n")).join("\\n");
+}
+function calculateExpression(message){
+  const m=message.match(/(?:calculate|what is|compute)\\s+([0-9+\\-*/().%\\s]+)$/i);if(!m)return null;
+  const expr=m[1].trim();if(!/^[0-9+\\-*/().%\\s]+$/.test(expr))return null;
+  try{const result=Function(`"use strict";return (${expr})`)();if(Number.isFinite(result))return result}catch{}return null;
+}
+function localResponse(message){
+  const command=classifyCommand(message), text=message.toLowerCase().trim();
+  if(command.permission==="locked"){logAction(command.action,"blocked",message);return {reply:"I cannot execute that operation without the required security authorization, Sir.",permissionRequired:true,permissionLevel:"locked",action:command.action}}
+  if(command.permission==="approval"){logAction(command.action,"approval_required",message);return {reply:"That action requires your approval, Sir. I have not executed it.",permissionRequired:true,permissionLevel:"approval",action:command.action}}
+  if(text.includes("who am i")||text.includes("what is my name"))return {reply:"You are Bryson Kresse, Sir.",permissionRequired:false};
+  if(text.includes("what do you know about me")||text.includes("tell me everything about me")){
+    const p=profile.identity||{},a=profile.athletics||{},b=profile.business||{},j=profile.jarvisProject||{};
+    return {reply:`You are ${p.fullName||"Bryson Kresse"}, age ${p.age||15}, Sir. You are a track-and-field athlete whose primary event is high jump, currently at ${a.currentHighJump||"6'0\""}. Your current squat is ${a.currentSquat||"315 lb"}. You run ${(b.brands||["BK Media"])[0]} and are building a professional sports-media business. You are also building this JARVIS system. I have your complete local profile loaded, plus persistent conversation memory.`,permissionRequired:false};
+  }
+  if(text.startsWith("remember ")||text.startsWith("don't forget ")){const fact=message.replace(/^(remember|don't forget)\\s+/i,"").trim();if(fact){remember(fact);rememberConversation("user",message);return {reply:"Understood, Sir. I've stored that in local memory.",permissionRequired:false}}}
+  if(text.includes("do you remember"))return {reply:memory.facts.length?"Yes, Sir. Recent memories:\\n"+memory.facts.slice(-10).map(x=>"• "+x.text).join("\\n"):"I don't have saved local memories yet, Sir.",permissionRequired:false};
+  const calc=calculateExpression(message);if(calc!==null)return {reply:`The answer is ${calc}, Sir.`,permissionRequired:false};
+  if(text.includes("what are my")||text.includes("my profile")||text.includes("about me")){const answer=smartProfileAnswer(message);if(answer)return {reply:"Here's what I found in your personal knowledge core, Sir:\\n\\n"+answer,permissionRequired:false}}
+  if(text.includes("status"))return {reply:"All primary JARVIS systems are operational, Sir. Local profile and persistent memory are online. Computer control remains permission-gated.",permissionRequired:false};
+  if(text.includes("what can you do")||text.includes("capabilities"))return {reply:"I can use your local profile, remember facts, maintain recent conversation memory, calculate, speak, answer built-in knowledge questions, report system status, and prepare permission-gated computer actions. No external AI API is required for these functions.",permissionRequired:false};
+  if(text.includes("hello")||text.includes("hey"))return {reply:"Good evening, Sir. All primary systems are online. How may I assist you?",permissionRequired:false};
+  const knowledge={
+    "what is javascript":"JavaScript is a programming language used heavily for web applications, servers, automation, and interactive software.",
+    "what is node":"Node.js is a JavaScript runtime that lets JavaScript run outside the browser, including on servers and local computers.",
+    "what is express":"Express is a lightweight Node.js web framework used to build HTTP servers and APIs.",
+    "what is an api":"An API is an interface that lets software systems communicate through defined requests and responses.",
+    "what is ai":"Artificial intelligence is software designed to perform tasks that normally require human-like reasoning, perception, learning, or decision-making."
+  };
+  for(const [q,a] of Object.entries(knowledge))if(text===q||text===q+"?")return {reply:a+"\n\nIf you'd like, Sir, I can explain it at a beginner, technical, or JARVIS-builder level.",permissionRequired:false};
+  return {reply:`Understood, Sir. I received: "${message}". My local reasoning core is active, but I do not have a cloud model available right now. I can still use your profile, memory, built-in knowledge, calculations, and permission system.`,permissionRequired:false};
+}
+
+app.post("/api/chat", async (req, res) => {\n  const message = String(req.body?.message || "").trim();\n  if (!message) return res.status(400).json({ error: "Message required." });\n  try { rememberConversation("user",message); const result=localResponse(message); rememberConversation("assistant",result.reply); res.json(result); }\n  catch (error) { console.error(error); res.status(500).json({ error: "JARVIS encountered an internal error." }); }\n});\n.post("/api/chat", async (req, res) => {
   const message = String(req.body?.message || "").trim();
   if (!message) return res.status(400).json({ error: "Message required." });
   try { res.json(localResponse(message)); }
