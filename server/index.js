@@ -141,6 +141,83 @@ function cleanQuestion(message) {
     .replace(/\s+/g, " ");
 }
 
+function normalizedWords(text) {
+  return cleanQuestion(text)
+    .replace(/[^a-z0-9' ]/g, " ")
+    .split(/\s+/)
+    .filter(Boolean);
+}
+
+function hasAny(text, phrases) {
+  return phrases.some(phrase => text.includes(phrase));
+}
+
+function answerFromProfile(text) {
+  const p = profile.identity || {};
+  const a = profile.athletics || {};
+  const b = profile.business || {};
+  const j = profile.jarvisProject || {};
+  const c = profile.creativeWork || {};
+
+  if (hasAny(text, ["what do i do", "what is my job", "what do i do for work", "what do i do for a living"])) {
+    return `You have several connected roles, Sir. You're a track-and-field athlete, primarily a high jumper, and you run ${(b.brands || ["BK Media"])[0]}, your sports-media business. You shoot sports photography and video, cover events, and are building BK Media into a professional company. You're also building JARVIS and developing your skills across technology and entrepreneurship.`;
+  }
+
+  if (hasAny(text, ["what are my businesses", "what business do i run", "what companies do i have", "what do i own"])) {
+    return `Your media brands are ${(b.brands || ["BK Media"]).join(", ")}. Your core business is sports photography, sports videography, media production, event coverage and sports content. Your goal is to turn BK Media into a legitimate professional sports-media company.`;
+  }
+
+  if (hasAny(text, ["what sport do i play", "what sport am i in", "what athletics do i do", "what events do i do"])) {
+    return `You're a track-and-field athlete, Sir. High jump is your primary event, and you also compete in the 100m, long jump and discus. Your current high jump is ${a.currentHighJump || "6'0\""} and your current squat is ${a.currentSquat || "315 lb"}.`;
+  }
+
+  if (hasAny(text, ["how high do i jump", "what is my high jump", "what do i jump"])) {
+    return `Your current high jump is ${a.currentHighJump || "6'0\""}, Sir. Your current squat is ${a.currentSquat || "315 lb"}.`;
+  }
+
+  if (hasAny(text, ["what am i working on", "what am i building", "what projects am i working on", "what are my projects"])) {
+    return "You're building BK Media into a professional sports-media company, developing your track-and-field and recruiting career, building JARVIS into a serious personal AI assistant, creating professional websites and digital products, and turning your existing skills into income.";
+  }
+
+  if (hasAny(text, ["what are my goals", "what are my main goals", "what am i trying to accomplish", "where am i headed"])) {
+    return "Your major goals are athletic development and recruiting, growing BK Media, shooting larger events, building JARVIS, learning technology, and turning your skills into real businesses and income.";
+  }
+
+  if (hasAny(text, ["tell me about my photography", "what kind of photography", "what photography do i do", "what am i good at in photography"])) {
+    return `Your work is primarily sports photography and visual storytelling. You have ${b.experience || "over 1.5 years"} of experience and work with cinematic sports imagery, sports portraits, high-jump photography, color grading and event coverage. Your stated selling points are great photos and fast response time.`;
+  }
+
+  if (hasAny(text, ["what do you know about me", "tell me everything about me", "tell me about myself", "who is bryson"])) {
+    return `You're ${p.fullName || "Bryson Kresse"}, age ${p.age || 15}, Sir. You're based in ${p.location || "Alabama, USA"}, you're a track-and-field athlete with high jump as your primary event, and you currently jump ${a.currentHighJump || "6'0\""} and squat ${a.currentSquat || "315 lb"}. You run ${(b.brands || ["BK Media"])[0]} and have ${b.experience || "over 1.5 years"} of sports-media experience. You're also building JARVIS and pursuing a future across sports, media, technology and entrepreneurship.`;
+  }
+
+  if (hasAny(text, ["what is jarvis", "what am i building jarvis", "tell me about my ai", "what are you supposed to be"])) {
+    return `I'm JARVIS, your personal AI assistant, Sir. The project is designed around long-term memory, your personal profile, voice interaction, permission-controlled computer access, task planning and a futuristic interface. The current core runs locally without requiring an external AI API.`;
+  }
+
+  if (hasAny(text, ["what are my preferences", "how do i like you to respond", "how should you talk to me"])) {
+    const pref = profile.assistantPreferences || {};
+    return `You want me called JARVIS and you want me to address you as ${pref.addressUserAs || "Sir"}. Your preferred style is ${pref.tone || "calm, capable, professional and futuristic"}, with a ${pref.voice || "male butler"} voice and a ${pref.theme || "dark futuristic"} interface. You prefer action over theory and finished solutions over vague explanations.`;
+  }
+
+  if (hasAny(text, ["what are my strengths", "what am i good at", "what are my skills"])) {
+    const skills = (c.skills || []).slice(0, 8);
+    return skills.length ? "Some of your strongest skills include " + skills.join(", ") + "." : null;
+  }
+
+  return null;
+}
+
+function conversationalAnswer(text) {
+  if (hasAny(text, ["good morning", "good afternoon", "good evening"])) {
+    return "Good evening, Sir. JARVIS is online and ready.";
+  }
+  if (hasAny(text, ["thanks", "thank you"])) return "You're welcome, Sir.";
+  if (hasAny(text, ["are you there", "you there", "are you online"])) return "Always, Sir. All local JARVIS systems are online.";
+  if (hasAny(text, ["who are you"])) return "I am JARVIS, your personal AI assistant, Sir.";
+  return null;
+}
+
 function localResponse(message) {
   const command = classifyCommand(message);
   const text = cleanQuestion(message);
