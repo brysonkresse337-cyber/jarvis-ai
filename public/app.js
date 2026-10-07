@@ -5,13 +5,13 @@ function speak(text){
   const speakNow=()=>{
     window.speechSynthesis.cancel();
     const u=new SpeechSynthesisUtterance(text);
-    u.rate=1.25;
-    u.pitch=1.35;
+    u.rate=0.88;
+    u.pitch=0.92;
     u.volume=1;
     const voices=window.speechSynthesis.getVoices();
     const preferred=
-      voices.find(v=>/Samantha|Karen|Victoria|Ava|Allison|Susan|Zira|Moira/i.test(v.name)&&/^en(-US|-GB)?/i.test(v.lang))||
-      voices.find(v=>/female/i.test(v.name)&&/^en/i.test(v.lang))||
+      voices.find(v=>/Daniel|Alex|George|Aaron|Tom|Oliver|Fred/i.test(v.name)&&/^en(-US|-GB)?/i.test(v.lang))||
+      voices.find(v=>/male/i.test(v.name)&&/^en/i.test(v.lang))||
       voices.find(v=>/^en-US/i.test(v.lang))||
       voices.find(v=>/^en-GB/i.test(v.lang));
     if(preferred) u.voice=preferred;
