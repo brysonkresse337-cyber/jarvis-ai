@@ -174,6 +174,69 @@ const curriculum = {
   applied: ["education","journalism","media studies","hospitality","tourism","agriculture","forestry","urban planning","library science"]
 };
 
+function detectAcademicField(text) {
+  const t = cleanQuestion(text);
+  const fieldKeywords = {
+    mathematics: ["math","mathematics","algebra","geometry","trigonometry","calculus","statistics","probability","linear algebra","differential equations","number theory"],
+    physics: ["physics","mechanics","thermodynamics","quantum","relativity","electromagnetism","optics"],
+    chemistry: ["chemistry","chemical","organic chemistry","inorganic chemistry","biochemistry","stoichiometry","molecule","atom"],
+    biology: ["biology","cell","genetics","evolution","ecology","microbiology","anatomy","physiology","neuroscience"],
+    computerScience: ["computer science","programming","coding","algorithm","data structure","software","operating system","database","networking","cybersecurity","artificial intelligence","machine learning"],
+    engineering: ["engineering","mechanical","electrical engineering","civil engineering","aerospace","robotics","control systems"],
+    business: ["business","accounting","finance","marketing","management","entrepreneurship","operations","strategy"],
+    socialSciences: ["psychology","sociology","anthropology","political science","economics","international relations","criminology","communication"],
+    humanities: ["history","philosophy","ethics","logic","literature","linguistics","religion","classics","humanities"],
+    health: ["medicine","medical","health","public health","nutrition","kinesiology","exercise science","pharmacology","pathology"],
+    law: ["law","legal","constitutional","criminal law","contracts","torts"],
+    earthSpace: ["geology","geography","meteorology","oceanography","climate","astronomy","astrophysics","planetary science"],
+    creative: ["art","design","photography","film","cinema","music","theater","architecture","creative writing"],
+    applied: ["education","journalism","media","hospitality","tourism","agriculture","forestry","urban planning"]
+  };
+  let best = null;
+  let bestScore = 0;
+  for (const [field, words] of Object.entries(fieldKeywords)) {
+    const score = words.reduce((n, word) => n + (t.includes(word) ? (word.includes(" ") ? 3 : 1) : 0), 0);
+    if (score > bestScore) { bestScore = score; best = field; }
+  }
+  return bestScore ? best : null;
+}
+
+function academicAnswer(text) {
+  const field = detectAcademicField(text);
+  if (!field) return null;
+  const t = cleanQuestion(text);
+  const subjects = curriculum[field] || [];
+  const display = field === "computerScience" ? "computer science" :
+    field === "earthSpace" ? "earth and space science" :
+    field === "socialSciences" ? "the social sciences" :
+    field === "humanities" ? "the humanities" :
+    field === "creative" ? "creative fields" :
+    field === "applied" ? "applied fields" : field;
+
+  const summaries = {
+    mathematics: "Mathematics studies quantity, structure, space, patterns and change.",
+    physics: "Physics studies matter, energy, motion, forces, fields, space and time.",
+    chemistry: "Chemistry studies matter, including its composition, structure, properties and reactions.",
+    biology: "Biology studies living systems, from molecules and cells to organisms, populations and ecosystems.",
+    computerScience: "Computer science studies computation, information, algorithms, software and computer systems.",
+    engineering: "Engineering applies mathematics and science to design, analyze and improve real-world systems.",
+    business: "Business studies organizations, markets, money, operations, strategy and how value is created and exchanged.",
+    socialSciences: "The social sciences study people, behavior, societies, institutions and relationships.",
+    humanities: "The humanities examine human history, ideas, culture, language, philosophy and creative expression.",
+    health: "Health sciences study the human body, disease, wellness, prevention and healthcare.",
+    law: "Law studies legal rules, institutions, rights, responsibilities and methods of legal reasoning.",
+    earthSpace: "Earth and space sciences study our planet, its systems and the universe beyond Earth.",
+    creative: "Creative fields study artistic expression, design, communication and the creation of visual, written and performance work.",
+    applied: "Applied fields use knowledge and professional methods to solve practical problems in society."
+  };
+
+  const teachRequest = /^(tell me about|explain|teach me|what is|what are|how does|why does|why is|describe|define)\b/i.test(t);
+  if (teachRequest || t.split(" ").length <= 6) {
+    return `${summaries[field]} At a college level, ${display} can cover ${subjects.slice(0, 10).join(", ")}. I can break any of those areas down from beginner level through advanced material, with examples, equations, timelines, practice problems or step-by-step lessons, Sir.`;
+  }
+  return `That question falls under ${display}. I can work through it at a college level, Sir. The relevant foundation includes ${subjects.slice(0, 10).join(", ")}.`;
+}
+
 function curriculumAnswer(text) {
   const t = cleanQuestion(text);
   const aliases = {
@@ -288,6 +351,8 @@ function localResponse(message) {
   const normalized = cleanQuestion(message);
   const contextReply = contextualReply(normalized);
   if (contextReply) return { reply: contextReply, permissionRequired: false };
+  const academicReply = academicAnswer(normalized);
+  if (academicReply) return { reply: academicReply, permissionRequired: false };
   const curriculumReply = curriculumAnswer(normalized);
   if (curriculumReply) return { reply: curriculumReply, permissionRequired: false };
   const profileReply = answerFromProfile(normalized);
