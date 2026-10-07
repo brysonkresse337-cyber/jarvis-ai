@@ -190,8 +190,16 @@ function curriculumAnswer(text) {
   const field = aliases[key];
   const subjects = curriculum[field];
   if (!subjects) return null;
-  if (hasAny(t, ["what do you know about", "what can you teach me", "what is covered", "what subjects", "what does it include", "curriculum"])) {
-    return `I have a structured college-level foundation for ${field === "computerScience" ? "computer science" : field === "earthSpace" ? "earth and space science" : field === "socialSciences" ? "the social sciences" : field === "humanities" ? "the humanities" : field === "creative" ? "creative fields" : field === "applied" ? "applied fields" : field}. The major areas include ${subjects.join(", ")}. I can explain individual subjects from introductory through advanced levels, Sir.`;
+  if (hasAny(t, ["what do you know about", "what can you teach me", "what is covered", "what subjects", "what does it include", "curriculum", "tell me about", "explain", "teach me", "what is"])) {
+    const display = field === "computerScience" ? "computer science" : field === "earthSpace" ? "earth and space science" : field === "socialSciences" ? "the social sciences" : field === "humanities" ? "the humanities" : field === "creative" ? "creative fields" : field === "applied" ? "applied fields" : field;
+    const summaries = {
+      chemistry: "Chemistry is the study of matter—its composition, structure, properties and reactions. At college level, the core path usually starts with atomic structure, periodic trends, chemical bonding, stoichiometry, gases, thermochemistry, kinetics, equilibrium, acids and bases, and electrochemistry, then moves into organic, inorganic, analytical and physical chemistry.",
+      mathematics: "Mathematics studies quantity, structure, space, patterns and change. A college foundation progresses through algebra, trigonometry, calculus, linear algebra, differential equations, probability and statistics, with advanced paths into analysis, abstract algebra, topology and optimization.",
+      physics: "Physics studies matter, energy, motion, forces, fields, space and time. A college foundation covers mechanics, waves, electricity and magnetism, thermodynamics, optics, relativity and quantum mechanics.",
+      biology: "Biology studies living systems from molecules and cells to organisms, populations and ecosystems. College foundations include cell biology, genetics, evolution, physiology, microbiology, ecology and molecular biology.",
+      computerScience: "Computer science studies computation and information. A college foundation includes programming, data structures, algorithms, computer architecture, operating systems, databases, networks, software engineering, cybersecurity and artificial intelligence."
+    };
+    return `${summaries[field] || `I have a structured college-level foundation for ${display}. The major areas include ${subjects.join(", ")}.`} I can teach it from beginner level through advanced college material, Sir.`;
   }
   return null;
 }
