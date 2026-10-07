@@ -219,6 +219,13 @@ function conversationalAnswer(text) {
 }
 
 function localResponse(message) {
+  const normalized = cleanQuestion(message);
+  const profileReply = answerFromProfile(normalized);
+  if (profileReply) return { reply: profileReply, permissionRequired: false };
+
+  const conversationalReply = conversationalAnswer(normalized);
+  if (conversationalReply) return { reply: conversationalReply, permissionRequired: false };
+
   const command = classifyCommand(message);
   const text = cleanQuestion(message);
 
