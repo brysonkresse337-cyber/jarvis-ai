@@ -157,6 +157,45 @@ function hasAny(text, phrases) {
   return phrases.some(phrase => text.includes(phrase));
 }
 
+const curriculum = {
+  mathematics: ["arithmetic","algebra","geometry","trigonometry","precalculus","calculus","multivariable calculus","linear algebra","differential equations","probability","statistics","discrete mathematics","number theory","numerical methods","real analysis","complex analysis","abstract algebra","topology","optimization"],
+  physics: ["classical mechanics","electricity and magnetism","waves","optics","thermodynamics","statistical mechanics","quantum mechanics","special relativity","general relativity","fluid mechanics","solid state physics","nuclear physics","particle physics","astrophysics"],
+  chemistry: ["general chemistry","organic chemistry","inorganic chemistry","physical chemistry","analytical chemistry","biochemistry","materials chemistry","spectroscopy","chemical kinetics","thermochemistry"],
+  biology: ["cell biology","molecular biology","genetics","evolution","ecology","microbiology","immunology","physiology","anatomy","neuroscience","developmental biology","biotechnology","bioinformatics"],
+  computerScience: ["programming","data structures","algorithms","computer architecture","operating systems","databases","computer networks","distributed systems","software engineering","compilers","cybersecurity","cryptography","artificial intelligence","machine learning","deep learning","computer graphics","human-computer interaction"],
+  engineering: ["mechanical engineering","electrical engineering","computer engineering","civil engineering","chemical engineering","aerospace engineering","biomedical engineering","industrial engineering","materials engineering","systems engineering","robotics","control systems"],
+  business: ["accounting","finance","economics","marketing","management","operations","entrepreneurship","business law","organizational behavior","strategy","supply chains","business analytics"],
+  socialSciences: ["psychology","sociology","anthropology","political science","international relations","human geography","economics","criminology","communication","public policy"],
+  humanities: ["history","philosophy","ethics","logic","literature","linguistics","religious studies","classics","cultural studies","art history"],
+  health: ["anatomy","physiology","pathology","pharmacology","epidemiology","public health","nutrition","kinesiology","exercise science","health sciences"],
+  law: ["constitutional law","criminal law","civil law","contracts","property law","torts","administrative law","international law","legal reasoning"],
+  earthSpace: ["geology","geophysics","meteorology","oceanography","climatology","environmental science","astronomy","planetary science","astrophysics"],
+  creative: ["visual art","graphic design","photography","film","cinema","music theory","music production","theater","creative writing","architecture"],
+  applied: ["education","journalism","media studies","hospitality","tourism","agriculture","forestry","urban planning","library science"]
+};
+
+function curriculumAnswer(text) {
+  const t = cleanQuestion(text);
+  const aliases = {
+    math: "mathematics", mathematics: "mathematics", physics: "physics", chemistry: "chemistry",
+    biology: "biology", cs: "computerScience", "computer science": "computerScience",
+    engineering: "engineering", business: "business", economics: "business",
+    psychology: "socialSciences", sociology: "socialSciences", history: "humanities",
+    philosophy: "humanities", law: "law", medicine: "health", health: "health",
+    kinesiology: "health", astronomy: "earthSpace", geology: "earthSpace",
+    art: "creative", design: "creative", film: "creative", journalism: "applied"
+  };
+  const key = Object.keys(aliases).find(k => t.includes(k));
+  if (!key) return null;
+  const field = aliases[key];
+  const subjects = curriculum[field];
+  if (!subjects) return null;
+  if (hasAny(t, ["what do you know about", "what can you teach me", "what is covered", "what subjects", "what does it include", "curriculum"])) {
+    return `I have a structured college-level foundation for ${field === "computerScience" ? "computer science" : field === "earthSpace" ? "earth and space science" : field === "socialSciences" ? "the social sciences" : field === "humanities" ? "the humanities" : field === "creative" ? "creative fields" : field === "applied" ? "applied fields" : field}. The major areas include ${subjects.join(", ")}. I can explain individual subjects from introductory through advanced levels, Sir.`;
+  }
+  return null;
+}
+
 function answerFromProfile(text) {
   const p = profile.identity || {};
   const a = profile.athletics || {};
@@ -241,6 +280,8 @@ function localResponse(message) {
   const normalized = cleanQuestion(message);
   const contextReply = contextualReply(normalized);
   if (contextReply) return { reply: contextReply, permissionRequired: false };
+  const curriculumReply = curriculumAnswer(normalized);
+  if (curriculumReply) return { reply: curriculumReply, permissionRequired: false };
   const profileReply = answerFromProfile(normalized);
   if (profileReply) return { reply: profileReply, permissionRequired: false };
 
@@ -430,7 +471,23 @@ function localResponse(message) {
     "what is geography": "Geography studies Earth's places, environments, physical systems, human populations and how people interact with space.",
     "what is economics": "Economics studies how people and institutions allocate scarce resources, including production, trade, prices, incentives and markets.",
     "what is government": "Government is the system through which a society makes and enforces collective rules, provides public functions and exercises political authority.",
-    "what is computer science": "Computer science studies computation, algorithms, data, software, computer systems, networks, artificial intelligence and information processing."
+    "what is computer science": "Computer science studies computation, algorithms, data, software, computer systems, networks, artificial intelligence and information processing.",
+    "what is calculus": "Calculus is the mathematical study of change and accumulation. Differential calculus studies rates of change and derivatives, while integral calculus studies accumulation and areas.",
+    "what is linear algebra": "Linear algebra studies vectors, matrices, linear transformations, vector spaces and systems of linear equations. It is fundamental to physics, engineering, computer graphics and machine learning.",
+    "what is probability": "Probability is the mathematical framework for describing uncertainty and random events.",
+    "what is statistics": "Statistics is the science of collecting, analyzing, interpreting and communicating data.",
+    "what is machine learning": "Machine learning is a branch of artificial intelligence in which algorithms learn patterns from data to make predictions or decisions.",
+    "what is quantum mechanics": "Quantum mechanics is the physical theory describing matter and energy at microscopic scales, where systems exhibit quantization, probability and wave-particle behavior.",
+    "what is evolution": "Biological evolution is change in inherited characteristics of populations across generations. Natural selection is one major mechanism of evolution.",
+    "what is economics": "Economics studies how people and institutions make choices under scarcity and how resources, goods and services are produced, exchanged and distributed.",
+    "what is psychology": "Psychology is the scientific study of behavior and mental processes.",
+    "what is philosophy": "Philosophy investigates fundamental questions about reality, knowledge, reason, ethics, mind, language and existence.",
+    "what is sociology": "Sociology studies societies, social relationships, institutions, groups and patterns of human behavior.",
+    "what is political science": "Political science studies governments, political institutions, political behavior, public policy and power.",
+    "what is anthropology": "Anthropology studies humans across cultures and time, including biological, archaeological, linguistic and cultural dimensions.",
+    "what is geology": "Geology studies Earth, its materials, structure, history and the processes that shape the planet.",
+    "what is astronomy": "Astronomy studies stars, planets, galaxies, black holes, cosmology and other objects and phenomena beyond Earth.",
+    "what is ethics": "Ethics is the philosophical study of right and wrong, duties, values, moral responsibility and how people ought to act."
   };
 
   if (knowledge[text]) {
