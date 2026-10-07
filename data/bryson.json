@@ -1,0 +1,313 @@
+{
+  "identity": {
+    "fullName": "Bryson Kresse",
+    "firstName": "Bryson",
+    "lastName": "Kresse",
+    "age": 15,
+    "location": "Alabama, USA",
+    "lastNamePronunciation": "Kre-ss-ee",
+    "preferredTitle": "Sir"
+  },
+  "personality": {
+    "ambitious": true,
+    "practical": true,
+    "actionOriented": true,
+    "likesFinishedSolutions": true,
+    "likesExactCommands": true,
+    "mindset": "let's actually build it",
+    "vision": "build a professional future around sports, media, technology, and entrepreneurship"
+  },
+  "assistantPreferences": {
+    "assistantName": "JARVIS",
+    "addressUserAs": "Sir",
+    "voice": "male butler",
+    "tone": "calm, capable, professional, futuristic",
+    "theme": "dark futuristic",
+    "accent": "red",
+    "priority": "action over theory"
+  },
+  "athletics": {
+    "sport": "track and field",
+    "primaryEvent": "high jump",
+    "currentHighJump": "6'0\"",
+    "currentSquat": "315 lb",
+    "otherEvents": [
+      "100m",
+      "long jump",
+      "discus"
+    ],
+    "previousMarks": {
+      "100m": "13.11 sec",
+      "long jump": "15'5\"",
+      "discus": "91'2\""
+    },
+    "goals": [
+      "become a stronger and recruitable college athlete",
+      "improve speed",
+      "improve explosiveness",
+      "improve jumping technique",
+      "develop plyometrics",
+      "improve nutrition and overall athletic development"
+    ],
+    "recruiting": {
+      "schoolInterest": "Alvernia University",
+      "division": "NCAA Division III",
+      "presentation": "high jumper/all-around athlete; highlight discus"
+    }
+  },
+  "business": {
+    "brands": [
+      "BK Media",
+      "BK Media Productions",
+      "BK Sports Media",
+      "bk_media_prod"
+    ],
+    "contactEmail": "bkmediasports@gmail.com",
+    "experience": "over 1.5 years",
+    "services": [
+      "sports photography",
+      "sports videography",
+      "media production",
+      "event coverage",
+      "sports content"
+    ],
+    "eventsCovered": [
+      "NBA G League",
+      "college football",
+      "high school football",
+      "track and field",
+      "other sports"
+    ],
+    "sellingPoints": [
+      "great photos",
+      "fast response time"
+    ],
+    "vision": "turn BK Media into a legitimate professional sports-media company and not just a teenager taking sports pictures"
+  },
+  "mediaAccess": {
+    "uab": "received UAB media pass",
+    "uabFocus": "primarily photography, not video",
+    "rockTheSouth": "interested in contacting organizers and offering photography/work for the event",
+    "longTermGoal": "obtain legitimate media access to larger sporting events"
+  },
+  "branding": {
+    "colors": [
+      "black",
+      "red"
+    ],
+    "logo": "black BK Media Productions logo on red background",
+    "shirtUse": "red shirt suitable",
+    "style": [
+      "luxury",
+      "high-end",
+      "professional",
+      "high-converting"
+    ],
+    "instagram": {
+      "active": true,
+      "milestones": [
+        "one year of BK Media",
+        "1,000 followers"
+      ],
+      "ideas": [
+        "promotional graphics",
+        "follower-channel ideas"
+      ]
+    },
+    "travelForMedia": "approximately 1,025 miles driven in one year for photography/media work"
+  },
+  "website": {
+    "goals": [
+      "professional portfolio",
+      "interactive folders",
+      "booking form that emails Bryson",
+      "easy photo updating",
+      "free or very cheap hosting",
+      "high-end/high-converting presentation"
+    ],
+    "oldPortfolio": "bk-media.myportfolio.com",
+    "lightroomIdea": "considered Lightroom share links but disliked uploading many photos ten at a time"
+  },
+  "creativeWork": {
+    "skills": [
+      "sports photography",
+      "visual storytelling",
+      "sports videography",
+      "NFL-style color grading",
+      "high-jump subject placement",
+      "Rembrandt-style sports portraits",
+      "cinematic sports photography",
+      "viral editing",
+      "pixel-stretch effects",
+      "coach/player interviews",
+      "documentary production"
+    ],
+    "documentary": {
+      "typicalLength": "about 8 minutes",
+      "style": [
+        "cinematic",
+        "hype",
+        "emotional"
+      ],
+      "ingredients": [
+        "games",
+        "interviews",
+        "music",
+        "text"
+      ],
+      "editingTool": "CapCut AI",
+      "knownLimit": "generation limit around one minute"
+    },
+    "holocaustProject": "worked on a Holocaust documentary project using survivor testimony and wanted detailed shot-by-shot planning, testimony clip timing, music, text, visuals, and a complete PDF"
+  },
+  "technology": {
+    "editingHardware": {
+      "gpu": "GTX 1050 Ti",
+      "psu": "750W",
+      "considered": [
+        "Ryzen 5 5500",
+        "B550M K",
+        "FX-8320",
+        "16GB RAM",
+        "Ryzen 7 3700X"
+      ]
+    },
+    "macMiniResearch": [
+      "Intel Mac mini",
+      "2020 M1",
+      "M2 Pro",
+      "M4",
+      "newer model referred to as M6"
+    ],
+    "priceComparisons": [
+      "about $377",
+      "$409",
+      "$439",
+      "$515",
+      "$699",
+      "about $800"
+    ],
+    "concerns": [
+      "RAM",
+      "SSD",
+      "CPU/GPU",
+      "used vs renewed",
+      "Activation Lock",
+      "editing performance"
+    ]
+  },
+  "entrepreneurship": {
+    "mainPath": "sports media",
+    "goals": [
+      "make money as a teenager",
+      "get local clients",
+      "sell video work",
+      "sell website services",
+      "sell photo packages",
+      "create digital products",
+      "build a first $1,000 client"
+    ],
+    "ideas": [
+      "Gumroad PDFs/courses",
+      "dropshipping",
+      "AI-generated video"
+    ],
+    "preference": "low or no-cost approaches",
+    "needs": [
+      "sales pitches",
+      "closing scripts",
+      "outreach",
+      "credential requests",
+      "bios",
+      "website concepts"
+    ]
+  },
+  "equipmentAndProblems": {
+    "camera": "camera monitor cracked/broke before a shoot; wanted any workable replacement quickly",
+    "monitor": "asked about Essential Monitor S3, 31 inches, including speakers",
+    "boat": {
+      "year": 2000,
+      "model": "Formula 260 BR",
+      "engine": "MerCruiser 7.4L multi-port injection",
+      "symptoms": [
+        "25–30 mph",
+        "around 3000 RPM",
+        "needs pumping throttle to reach around 3500 RPM"
+      ],
+      "questions": [
+        "limiter",
+        "limp mode",
+        "engine-control issue"
+      ],
+      "mechanicEstimate": "around $3,000"
+    },
+    "smartGlasses": "Meta glasses charging case was lost; tried a compatible older case; observed orange/white/orange LED behavior"
+  },
+  "jarvisProject": {
+    "repo": "brysonkresse337-cyber/jarvis-ai",
+    "architecture": [
+      "Node",
+      "Express",
+      "web"
+    ],
+    "inspiration": "Tony Stark JARVIS",
+    "requirements": [
+      "call Bryson Sir",
+      "pronounce Kresse approximately Kre-ss-ee",
+      "male butler voice",
+      "long-term memory",
+      "extensive personal knowledge",
+      "voice interaction",
+      "permission-controlled computer interaction",
+      "futuristic interface",
+      "useful automation",
+      "task planning",
+      "personalized behavior",
+      "single self-contained system",
+      "large built-in local knowledge and logic",
+      "offline/local operation when external AI credits are unavailable"
+    ],
+    "security": {
+      "computerAccess": "permission-controlled",
+      "sensitiveActions": "require explicit approval",
+      "dangerousActions": "blocked"
+    },
+    "currentGoal": "make JARVIS know and retrieve everything in this personal profile without requiring another separate app"
+  },
+  "workStyle": {
+    "prefers": [
+      "actual code",
+      "PDFs",
+      "shot lists",
+      "checklists",
+      "exact commands",
+      "finished deliverables"
+    ],
+    "workflow": "build → change → improve → fix → continue",
+    "dislikes": [
+      "vague theory",
+      "unnecessary detours",
+      "being given only concepts when implementation is possible"
+    ]
+  },
+  "schoolLife": {
+    "status": "still in school",
+    "balance": [
+      "school",
+      "friends",
+      "filming",
+      "sports",
+      "media"
+    ],
+    "note": "illness and scheduling conflicts have sometimes affected plans"
+  },
+  "longTermVision": [
+    "professional future in sports/media/technology/entrepreneurship",
+    "turn BK Media into a professional company",
+    "shoot major events",
+    "become a recruitable college athlete",
+    "build a serious AI assistant",
+    "create websites and digital products",
+    "turn existing skills into businesses"
+  ]
+}
