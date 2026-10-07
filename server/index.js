@@ -363,7 +363,7 @@ function localResponse(message) {
   if (text.includes("do you remember")) {
     return {
       reply: memory.facts.length
-        ? "Yes, Sir. Recent memories:\n" + memory.facts.slice(-8).map(x => "• " + x.text).join("\n")
+        ? "Yes, Sir. Here's what I remember: " + memory.facts.slice(-8).map(x => x.text).join(". ") + "."
         : "I don't have saved local memories yet, Sir.",
       permissionRequired: false
     };
