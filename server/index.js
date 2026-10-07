@@ -218,8 +218,24 @@ function conversationalAnswer(text) {
   return null;
 }
 
+function contextualReply(text) {
+  const recent = memory.conversation.slice(-12);
+  const lastAssistant = [...recent].reverse().find(x => x.role === "assistant")?.text || "";
+  if (!lastAssistant) return null;
+  if (hasAny(text, ["tell me more", "go deeper", "explain more", "more about that", "elaborate"])) {
+    if (/BK Media|sports-media|photography/i.test(lastAssistant)) return "Absolutely, Sir. The bigger picture with BK Media is to build a real sports-media operation with consistent branding, professional coverage, strong client relationships, fast delivery and access to larger events.";
+    if (/high jump|track-and-field|athlete/i.test(lastAssistant)) return "Absolutely, Sir. Your athletic path is centered on becoming a stronger and more recruitable track athlete, with high jump as the main event. That means improving speed, explosiveness, technique, strength and overall athletic development.";
+    if (/JARVIS|AI assistant/i.test(lastAssistant)) return "Absolutely, Sir. The direction for JARVIS is a personal assistant that knows you, remembers conversations, speaks naturally, helps plan tasks and eventually interacts with your Mac through explicit permission gates.";
+  }
+  if (hasAny(text, ["what did you just say", "what were you saying", "what was that"])) return lastAssistant;
+  if (hasAny(text, ["yes", "yeah", "yep", "sure", "okay", "ok"])) return "Understood, Sir. I'm with you.";
+  return null;
+}
+
 function localResponse(message) {
   const normalized = cleanQuestion(message);
+  const contextReply = contextualReply(normalized);
+  if (contextReply) return { reply: contextReply, permissionRequired: false };
   const profileReply = answerFromProfile(normalized);
   if (profileReply) return { reply: profileReply, permissionRequired: false };
 
@@ -413,8 +429,7 @@ function localResponse(message) {
   const profileAnswer = profileSearch(message);
   if (profileAnswer.length) {
     return {
-      reply: "I found this in your personal knowledge core, Sir:\n\n" +
-        profileAnswer.map(item => "• " + item.path + ": " + item.value).join("\n"),
+      reply: "I know quite a bit about that, Sir. " + profileAnswer.slice(0, 6).map(item => item.value).join(". ") + ".",
       permissionRequired: false
     };
   }
