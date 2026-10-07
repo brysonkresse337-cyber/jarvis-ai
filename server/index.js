@@ -119,6 +119,11 @@ function classifyCommand(message) {
 }
 
 function calculateExpression(message) {
+  const percent = message.match(/(?:what is|calculate|compute)\s+([0-9.]+)%\s+of\s+([0-9.]+)$/i);
+  if (percent) {
+    return (Number(percent[1]) / 100) * Number(percent[2]);
+  }
+
   const match = message.match(/(?:calculate|compute|what is)\s+([0-9+\-*/().%\s]+)$/i);
   if (!match) return null;
 
@@ -416,7 +421,16 @@ function localResponse(message) {
     "what is node": "Node.js is a JavaScript runtime that lets JavaScript run outside the browser, including on servers and local computers.",
     "what is express": "Express is a lightweight Node.js web framework used to build HTTP servers and APIs.",
     "what is an api": "An API is an interface that lets software systems communicate through defined requests and responses.",
-    "what is ai": "Artificial intelligence is software designed to perform tasks that normally require human-like reasoning, perception, learning or decision-making."
+    "what is ai": "Artificial intelligence is software designed to perform tasks that normally require human-like reasoning, perception, learning or decision-making.",
+    "what is history": "History is the study of past events, people, societies and civilizations using evidence such as documents, artifacts, oral traditions and archaeology.",
+    "what is mathematics": "Mathematics is the study of quantity, structure, space, patterns, change and logical relationships. Major areas include arithmetic, algebra, geometry, trigonometry, calculus, statistics and discrete mathematics.",
+    "what is physics": "Physics studies matter, energy, motion, forces, fields, space and time and the laws describing how they interact.",
+    "what is chemistry": "Chemistry studies matter, its properties, composition, structure and the reactions that transform it.",
+    "what is biology": "Biology is the study of living organisms, including their structure, function, evolution, genetics and ecosystems.",
+    "what is geography": "Geography studies Earth's places, environments, physical systems, human populations and how people interact with space.",
+    "what is economics": "Economics studies how people and institutions allocate scarce resources, including production, trade, prices, incentives and markets.",
+    "what is government": "Government is the system through which a society makes and enforces collective rules, provides public functions and exercises political authority.",
+    "what is computer science": "Computer science studies computation, algorithms, data, software, computer systems, networks, artificial intelligence and information processing."
   };
 
   if (knowledge[text]) {
@@ -467,13 +481,43 @@ app.post("/api/memory", (req, res) => {
   res.json({ success: true, memory });
 });
 
-app.post("/api/chat", (req, res) => {
+app.post("/api/chat", async (req, res) => {
   const message = String(req.body?.message || "").trim();
   if (!message) return res.status(400).json({ error: "Message required." });
 
   try {
     rememberConversation("user", message);
     const result = localResponse(message);
+
+    // If the local knowledge core does not recognize the question,
+    // use Wikipedia's public reference API as a knowledge fallback.
+    if (/^Understood, Sir\. I received:/i.test(result.reply)) {
+      const cleaned = message
+        .replace(/^(who|what|when|where|why|how)\s+/i, "")
+        .replace(/[?!.]+$/g, "")
+        .trim();
+
+      if (cleaned.length >= 3) {
+        try {
+          const url = "https://en.wikipedia.org/api/rest_v1/page/summary/" +
+            encodeURIComponent(cleaned.replace(/ /g, "_"));
+          const response = await fetch(url, {
+            headers: { "User-Agent": "JARVIS-BK/1.0" }
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            if (data.extract) {
+              result.reply = data.extract + " If you'd like, Sir, I can go deeper into that subject.";
+              result.knowledgeSource = "Wikipedia";
+            }
+          }
+        } catch {
+          // Stay fully functional offline if the reference service is unavailable.
+        }
+      }
+    }
+
     rememberConversation("assistant", result.reply);
     res.json(result);
   } catch (error) {
