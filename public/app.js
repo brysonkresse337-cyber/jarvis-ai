@@ -1,11 +1,26 @@
 const messages=document.getElementById("messages"),form=document.getElementById("chat-form"),input=document.getElementById("message-input"),mic=document.getElementById("mic-button"),permissionCount=document.getElementById("permission-count"),voiceStatus=document.getElementById("voice-status");
 function addMessage(who,text,kind="jarvis"){const el=document.createElement("div");el.className=`message ${kind}`;el.innerHTML=`<div class="message-label">${who}</div><div class="message-text"></div>`;el.querySelector(".message-text").textContent=text;messages.appendChild(el);messages.scrollTop=messages.scrollHeight}
-function speak(text){if(!("speechSynthesis"in window))return;window.speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.rate=2.0;u.pitch=1.35;u.volume=1;const voices=speechSynthesis.getVoices();const preferred=
-      voices.find(v=>/Samantha|Karen|Victoria|Ava|Allison|Susan/i.test(v.name)&&/en-US|en-GB/i.test(v.lang))||
-      voices.find(v=>/en-US/i.test(v.lang)&&/female|samantha|karen|victoria|ava|allison|susan/i.test(v.name))||
-      voices.find(v=>/en-US/i.test(v.lang))||
-      voices.find(v=>/en-GB/i.test(v.lang));
-    if(preferred)u.voice=preferred;speechSynthesis.speak(u)}
+function speak(text){
+  if(!("speechSynthesis" in window)) return;
+  const speakNow=()=>{
+    window.speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(text);
+    u.rate=2.0;
+    u.pitch=1.35;
+    u.volume=1;
+    const voices=window.speechSynthesis.getVoices();
+    const preferred=
+      voices.find(v=>/Samantha|Karen|Victoria|Ava|Allison|Susan|Zira|Moira/i.test(v.name)&&/^en(-US|-GB)?/i.test(v.lang))||
+      voices.find(v=>/female/i.test(v.name)&&/^en/i.test(v.lang))||
+      voices.find(v=>/^en-US/i.test(v.lang))||
+      voices.find(v=>/^en-GB/i.test(v.lang));
+    if(preferred) u.voice=preferred;
+    window.speechSynthesis.speak(u);
+  };
+  const voices=window.speechSynthesis.getVoices();
+  if(voices.length) speakNow();
+  else window.speechSynthesis.onvoiceschanged=()=>{window.speechSynthesis.onvoiceschanged=null;speakNow()};
+}
 function setBusy(busy){document.body.classList.toggle("jarvis-thinking",busy);input.disabled=busy;document.querySelector(".send-button").disabled=busy}
 async function send(message){if(!message.trim()||input.disabled)return;addMessage("YOU",message,"user");input.value="";setBusy(true);try{const r=await fetch("/api/chat",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message})});const d=await r.json();addMessage("JARVIS",d.reply||"I encountered an error.");if(d.permissionRequired) addMessage("SECURITY",`Permission level: ${d.permissionLevel||"approval"} • Action not executed`,"security");speak(d.reply||"I encountered an error.");}catch(e){addMessage("JARVIS","I am unable to reach my core server, Sir.");}finally{setBusy(false);input.focus()}}
 form.addEventListener("submit",e=>{e.preventDefault();send(input.value)});document.querySelectorAll("[data-command]").forEach(b=>b.addEventListener("click",()=>send(b.dataset.command)));
