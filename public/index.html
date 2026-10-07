@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JARVIS — BK Edition</title>
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<div class="background-grid"></div>
+<div class="app">
+<header class="topbar">
+<div class="brand"><div class="brand-orb"></div><div><div class="brand-name">JARVIS</div><div class="brand-subtitle">BK PERSONAL INTELLIGENCE</div></div></div>
+<div class="system-status"><span class="status-light"></span>SYSTEM ONLINE</div>
+</header>
+<main>
+<section class="hero">
+<div class="orb-container"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="orbit orbit-three"></div><div class="assistant-orb"><div class="orb-inner"></div><div class="orb-core"></div></div></div>
+<div class="eyebrow">PERSONAL INTELLIGENCE SYSTEM</div>
+<h1>Good to see you, <span>Sir.</span></h1>
+<p>JARVIS systems are standing by.</p>
+</section>
+<section class="chat-panel">
+<div id="messages" class="messages"><div class="message jarvis"><div class="message-label">JARVIS</div><div class="message-text">Good evening, Sir. All primary systems are online. How may I assist you?</div></div></div>
+<form id="chat-form"><button type="button" id="mic-button" class="control-button">🎙</button><input id="message-input" type="text" autocomplete="off" placeholder="Give JARVIS a command..."><button type="submit" class="send-button">SEND</button></form>
+</section>
+<section class="system-cards">
+<div class="system-card"><div class="card-label">CORE</div><div class="card-value">ONLINE</div><div class="card-description">JARVIS core responding</div></div>
+<div class="system-card"><div class="card-label">PERMISSIONS</div><div id="permission-count" class="card-value">LOADING</div><div class="card-description">Actions remain gated</div></div>
+<div class="system-card"><div class="card-label">CONTROL</div><div class="card-value">LOCKED</div><div class="card-description">Sensitive actions require approval</div></div>
+<div class="system-card"><div class="card-label">VOICE</div><div id="voice-status" class="card-value">READY</div><div class="card-description">Voice interface available</div></div>
+</section>
+<section class="quick-actions"><button data-command="What is my system status?">SYSTEM STATUS</button><button data-command="Who am I?">IDENTIFY ME</button><button data-command="What can you do?">CAPABILITIES</button></section>
+</main></div>
+<script src="/app.js"></script>
+</body></html>
